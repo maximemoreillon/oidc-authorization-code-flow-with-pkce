@@ -1,4 +1,3 @@
-// From https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce/add-login-using-the-authorization-code-flow-with-pkce
 import { randomBytes, createHash } from "crypto"
 
 export const base64URLEncode = (buf: Buffer) =>
