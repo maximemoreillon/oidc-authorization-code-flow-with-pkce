@@ -1,24 +1,14 @@
 import { Hono } from "hono"
 import { createCodVerifierAndChallenge } from "./pkce"
 import { getCookie, setCookie } from "hono/cookie"
-
-const { OAUTH_AUTHORITY = "http://localhost", OAUTH_CLIENT_ID = "" } =
-  process.env
-
-async function getOidcConfig() {
-  const openIdConfigUrl = `${OAUTH_AUTHORITY}/.well-known/openid-configuration`
-  const response = await fetch(openIdConfigUrl)
-  console.log(response.statusText)
-  return await response.json()
-}
-
-const { authorization_endpoint, token_endpoint } = await getOidcConfig()
+import { getOidcConfig, OAUTH_CLIENT_ID } from "./oidc"
 
 const app = new Hono()
 
 app.get("/", (c) => c.html('<a href="/login">Click here to login</a>'))
 
-app.get("/login", (c) => {
+app.get("/login", async (c) => {
+  const { authorization_endpoint } = await getOidcConfig()
   const { origin } = new URL(c.req.url)
   const redirect_uri = `${origin}/callback`
 
@@ -39,6 +29,7 @@ app.get("/login", (c) => {
 })
 
 app.get("/callback", async (c) => {
+  const { token_endpoint } = await getOidcConfig()
   const code = new URL(c.req.url).searchParams.get("code")
   if (!code) throw new Error("Code not available")
 
