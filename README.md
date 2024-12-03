@@ -4,6 +4,11 @@ This is some sample code that implements an Oauth 2.0 / OIDC authorization code 
 
 It roughly follows [this guide by Auth0](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce/add-login-using-the-authorization-code-flow-with-pkce)
 
+## Environment variables
+
+- OAUTH_AUTHORITY
+- OAUTH_CLIENT_ID
+
 ## Usage
 
 To install dependencies:
