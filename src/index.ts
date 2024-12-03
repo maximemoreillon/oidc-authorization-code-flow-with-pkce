@@ -5,7 +5,7 @@ import { getOidcConfig, OAUTH_CLIENT_ID } from "./oidc"
 
 const app = new Hono()
 
-app.get("/", (c) => c.html('<a href="/login">Click here to login</a>'))
+app.get("/", (c) => c.html(`<a href="/login">Click here to login</a>`))
 
 app.get("/login", async (c) => {
   const { authorization_endpoint } = await getOidcConfig()
@@ -57,6 +57,26 @@ app.get("/callback", async (c) => {
   }
 
   const response = await fetch(tokenUrl.toString(), options)
+
+  const data = await response.json()
+
+  setCookie(c, "access_token", data.access_token)
+
+  return c.json(data)
+})
+
+app.get("/userinfo", async (c) => {
+  const access_token = getCookie(c, "access_token")
+  if (!access_token) throw new Error("Access token not available")
+  const { userinfo_endpoint } = await getOidcConfig()
+
+  const options: RequestInit = {
+    headers: {
+      authorization: `Bearer ${access_token}`,
+    },
+  }
+
+  const response = await fetch(userinfo_endpoint, options)
 
   const data = await response.json()
 

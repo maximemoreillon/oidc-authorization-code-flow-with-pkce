@@ -4,6 +4,7 @@ export const { OAUTH_AUTHORITY = "http://localhost", OAUTH_CLIENT_ID = "" } =
 type OidcConfig = {
   authorization_endpoint: string
   token_endpoint: string
+  userinfo_endpoint: string
 }
 
 export let oidcConfig: OidcConfig
